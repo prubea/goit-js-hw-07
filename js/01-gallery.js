@@ -1,44 +1,43 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galery = document.querySelector(".gallery");
+const gallery = document.querySelector("div.gallery");
 
 const markup = galleryItems
-  .map((img) =>
-      `<div class="gallery__item">
-  <a class="gallery__link" href="${img.original}">
+  .map(elem => {
+    const images = `<div class="gallery__item">
+  <a class="gallery__link" href="${elem.original}">
     <img
       class="gallery__image"
-      src="${img.preview}"
-      data-source="${img.original}"
-      alt="${img.description}"
+      src="${elem.preview}"
+      data-source="${elem.original}"
+      alt="${elem.description}"
     />
   </a>
-</div>`
-  )
+</div>`;
+    return images;
+  })
   .join("");
 
-galery.insertAdjacentHTML("beforeend", markup);
+gallery.insertAdjacentHTML("afterbegin", markup);
 
-galery.addEventListener("click", lightBoxModal);
-
-function lightBoxModal(e) {
-  e.preventDefault();
-  const target = e.target;
-  const image = target.dataset.source;
-  if (e.target.nodeName !== "a.gallery__link") {
-    const modal = basicLightbox.create(
-      `
-        <img width="1400" height="900" src="${image}">
-	`
-    );
-    modal.show();
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") modal.close();
-    });
-  }
-}
-
-
-console.log(galleryItems);
+gallery.addEventListener("click", (event) => {
+  event.preventDefault();
+  
+  // const image = target.dataset.source;
+  // if (event.target.nodeName !== "a.gallery__link") {
+  if (event.target.nodeName !== "IMG") return;
+  
+  const imageData = event.target.getAttribute("data-source");
+  const imageAlt = event.target.getAttribute("alt");
+  const instance = basicLightbox.create(`
+        <img src="${imageData}" alt="${imageAlt}" />
+	`, {
+      onShow: (instance) => {
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") instance.close();
+        })
+      }
+  });
+instance.show();
+})
