@@ -24,8 +24,6 @@ gallery.insertAdjacentHTML("afterbegin", markup);
 gallery.addEventListener("click", (event) => {
   event.preventDefault();
   
-  // const image = target.dataset.source;
-  // if (event.target.nodeName !== "a.gallery__link") {
   if (event.target.nodeName !== "IMG") return;
   
   const imageData = event.target.getAttribute("data-source");
